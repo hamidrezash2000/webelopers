@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -6,15 +7,17 @@ from django.shortcuts import render
 
 
 def index(request):
-    return render(request, "index.html")
+    return render(request, "index.html", {
+        "user": request.user
+    })
+
 
 def signup(request):
     user = User()
     error = False
     if request.POST:
         user.username = request.POST.get("username")
-        password1 = request.POST.get("password1")
-        password2 = request.POST.get("password2")
+        password = request.POST.get("password1")
         if password1 != password2:
             return HttpResponseRedirect("/")
         user.password = password1
@@ -32,4 +35,18 @@ def signup(request):
 
 
 def login(request):
-    pass
+    if request.user.is_authenticated:
+        return HttpResponseRedirect("/")
+
+    if request.POST:
+        username = request.POST.get("username")
+        password = request.POST.get("password1")
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect("/")
+        else:
+            error = True
+    return render(request, "signup.html", {
+        "error": error
+    })
