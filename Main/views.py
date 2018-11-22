@@ -61,8 +61,16 @@ def login_(request):
     })
 
 
-
 def logout_(request):
     logout(request)
     return HttpResponseRedirect("/")
 
+
+def contact(request):
+    message = ""
+    if request.POST:
+        message = "درخواست شما ثبت شد"
+    return render(request, "contactus.html", {
+        "user": request.user,
+        "message": message
+    })
