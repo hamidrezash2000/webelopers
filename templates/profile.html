@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>index</title>
+    <title>profile</title>
 </head>
 <body>
     <nav id="id_navbar">
@@ -13,9 +13,14 @@
         <a href="/login" id=id_navbar_login>ورود</a>
         {% else %}
         <a href="/logout" id=id_navbar_logout>خروج</a> |
-        <a href="/profile" id=id_navbar_profile>پروفایل</a>
+        <a href="/profile" id=id_navbar_profile>پروفایل</a> |
+        <a href="/editprofile" id=id_edit_profile>ویرایش پروفایل</a>
         {% endif %}
     </nav>
-    سلام. به سامانه استادجو خوش آمدید.
+    <li id="id_username">نام کاربری : {{ user.username }}</li>
+    <li id="id_first_name">نام : {{ user.first_name }}</li>
+    <li id="id_last_name">نام خانوادگی : {{ user.last_name }}</li>
+
+
 </body>
 </html>

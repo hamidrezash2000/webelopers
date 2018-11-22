@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ثبت نام</title>
+    <title>edit profile</title>
 </head>
 <body>
-
     <nav id="id_navbar">
         <a href="/" id=id_navbar_home>صفحه اصلی</a> |
         <a href="/signup" id=id_navbar_signup>ثبت نام</a> |
@@ -18,15 +17,13 @@
         {% endif %}
     </nav>
 
-        {% if error %}
-            <div>نام کاربری یا گذرواژه غلط است</div>
-        {% endif %}
-
     <form method="post" action=".">
         {% csrf_token %}
-        <input type="text" placeholder="نام کاربری" name="username" id="id_username"/><br/>
-        <input type="password" placeholder="رمز عبور" name="password" id="id_password"/><br/>
-        <input type="submit" value="ورود" name="submit" id="id_submit"/>
+        <input type="text" placeholder="نام" name="first_name" id="id_first_name"/><br/>
+        <input type="text" placeholder="نام خانوادگی" name="last_name" id="id_last_name"/><br/>
+        <input type="submit" value="ویرایش" name="submit" id="id_submit"/>
     </form>
+
+
 </body>
 </html>
