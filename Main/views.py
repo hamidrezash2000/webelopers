@@ -28,9 +28,7 @@ def signup(request):
             return HttpResponseRedirect("/")
         else:
             error = True
-    return render(request, "login_form.html", {
-        "error": error
-    })
+    return render(request, "signup.html")
 
 
 def login(request):
