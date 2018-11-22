@@ -15,14 +15,23 @@ def index(request):
 def signup(request):
     user = User()
     error = False
+
     if request.POST:
+        user_exists = False
+        email_exists = False
+        password_rematch = False
         user.username = request.POST.get("username")
+        if User.objects.filter(username=user.username).exists():
+            user_exists = True
+
         password1 = request.POST.get("password1")
         password2 = request.POST.get("password2")
         if password1 != password2:
-            return HttpResponseRedirect("/")
+            password_rematch = True
         user.password = password1
         user.email = request.POST.get("email")
+        if User.objects.filter(password=user.email).exists():
+            email_exists = True
         user.first_name = request.POST.get("first_name")
         user.last_name = request.POST.get("last_name")
         user.save()
@@ -33,7 +42,10 @@ def signup(request):
         else:
             error = True
     return render(request, "signup.html", {
-        "user": request.user
+        "user": request.user,
+        "pass_rematch":password_rematch,
+        "email_exists":email_exists,
+        "user_exists":user_exists
     })
 
 
