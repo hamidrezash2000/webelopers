@@ -13,39 +13,32 @@ def index(request):
 
 
 def signup(request):
-    user = User()
-    error = False
-
+    user_exists = False
+    email_exists = False
+    password_rematch = False
     if request.POST:
-        user_exists = False
-        email_exists = False
-        password_rematch = False
-        user.username = request.POST.get("username")
-        if User.objects.filter(username=user.username).exists():
-            user_exists = True
-
+        username = request.POST.get("username")
         password1 = request.POST.get("password1")
         password2 = request.POST.get("password2")
+        email = request.POST.get("email")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        if User.objects.filter(username=username).exists():
+            user_exists = True
+        if User.objects.filter(email=email).exists():
+            email_exists = True
         if password1 != password2:
             password_rematch = True
-        user.password = password1
-        user.email = request.POST.get("email")
-        if User.objects.filter(password=user.email).exists():
-            email_exists = True
-        user.first_name = request.POST.get("first_name")
-        user.last_name = request.POST.get("last_name")
-        user.save()
 
-        if user is not None:
-            login(request)
-            return HttpResponseRedirect("/")
-        else:
-            error = True
+        if user_exists is False and password_rematch is False and email_exists is False:
+            user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name, password=password1)
+            return HttpResponseRedirect("/login")
+
     return render(request, "signup.html", {
         "user": request.user,
-        "pass_rematch":password_rematch,
-        "email_exists":email_exists,
-        "user_exists":user_exists
+        "pass_rematch": password_rematch,
+        "email_exists": email_exists,
+        "user_exists": user_exists
     })
 
 
@@ -65,7 +58,6 @@ def login_(request):
             error = True
     return render(request, "login.html", {
         "error": error,
-        "user": request.user
     })
 
 

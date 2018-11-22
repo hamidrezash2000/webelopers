@@ -18,10 +18,10 @@
         {% csrf_token %}
         <input type="text" placeholder="نام" name="first_name" id="id_first_name"/><br/>
         <input type="text" placeholder="نام خانوادگی" name="last_name" id="id_last_name"/><br/>
-        <input type="email" placeholder="ایمیل" name="email" id="id_email"/><br/>
-        <input type="text" placeholder="نام کاربری" name="username" id="id_username"/><br/>
+        <input type="email" placeholder="ایمیل" name="email" id="id_email"/>{% if email_exists %}کاربری با ایمیل وارد شده وجود دارد{% endif %}<br/>
+        <input type="text" placeholder="نام کاربری" name="username" id="id_username"/>{% if user_exists %}کاربری با نام کاربری وارد شده وجود دارد{% endif %}<br/>
         <input type="password" placeholder="رمز عبور" name="password1" id="id_password1"/><br/>
-        <input type="password" placeholder="تکرار رمز عبور" name="password2" id="id_password2"/><br/>
+        <input type="password" placeholder="تکرار رمز عبور" name="password2" id="id_password2"/>{% if pass_rematch %}گذرواژه و تکرار گذرواژه یکسان نیستند{% endif %}<br/>
         <input type="submit" value="ثبت نام" name="submit" id="id_submit"/>
     </form>
 </body>
