@@ -74,3 +74,20 @@ def contact(request):
         "user": request.user,
         "message": message
     })
+
+
+def profile(request):
+    return render(request, "profile.html",{
+        "user": request.user
+    })
+
+def editprofile(request):
+    if request.POST:
+        user = request.user
+        user.first_name = request.POST.get("first_name")
+        user.last_name = request.POST.get("last_name")
+        user.save()
+        return HttpResponseRedirect("/profile")
+    return render(request, "editprofile.html", {
+        "user": request.user,
+    })
