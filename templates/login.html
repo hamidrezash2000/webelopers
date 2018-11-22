@@ -5,11 +5,17 @@
     <title>ثبت نام</title>
 </head>
 <body>
+
     <nav id="id_navbar">
         <a href="/" id=id_navbar_home>صفحه اصلی</a> |
         <a href="/signup" id=id_navbar_signup>ثبت نام</a> |
+        {% if not user.is_authenticated %}
         <a href="/login" id=id_navbar_login>ورود</a>
+        {% else %}
+        <a href="/logout" id=id_navbar_logout>خروج</a>
+        {% endif %}
     </nav>
+
 
         {% if error %}
             <div>نام کاربری یا گذرواژه غلط است</div>
@@ -18,8 +24,8 @@
     <form method="post" action=".">
         {% csrf_token %}
         <input type="text" placeholder="نام کاربری" name="username" id="id_username"/><br/>
-        <input type="password" placeholder="رمز عبور" name="password1" id="id_password"/><br/>
-        <input type="submit" value="ثبت نام" name="submit" id="id_submit"/>
+        <input type="password" placeholder="رمز عبور" name="password" id="id_password"/><br/>
+        <input type="submit" value="ورود" name="submit" id="id_submit"/>
     </form>
 </body>
 </html>
