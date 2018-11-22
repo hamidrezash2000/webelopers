@@ -7,13 +7,9 @@
 <body>
 
     <nav id="id_navbar">
-        <a href="/" id="id_navbar_home">صفحه اصلی</a> |
-        <a href="/signup" id="id_navbar_signup">ثبت نام</a> |
-        {% if not user.is_authenticated %}
-        <a href="/login" id="id_navbar_login">ورود</a>
-        {% else %}
-        <a href="/logout" id="id_navbar_logout">خروج</a>
-        {% endif %}
+        <a href="/" id=id_navbar_home>صفحه اصلی</a> |
+        <a href="/signup" id=id_navbar_signup>ثبت نام</a> |
+        <a href="/login" id=id_navbar_login>ورود</a>
     </nav>
 
 

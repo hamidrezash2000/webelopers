@@ -13,27 +13,32 @@ def index(request):
 
 
 def signup(request):
-    user = User()
-    error = False
+    user_exists = False
+    email_exists = False
+    password_rematch = False
     if request.POST:
-        user.username = request.POST.get("username")
+        username = request.POST.get("username")
         password1 = request.POST.get("password1")
         password2 = request.POST.get("password2")
+        email = request.POST.get("email")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        if User.objects.filter(username=username).exists():
+            user_exists = True
+        if User.objects.filter(email=email).exists():
+            email_exists = True
         if password1 != password2:
-            return HttpResponseRedirect("/")
-        user.password = password1
-        user.email = request.POST.get("email")
-        user.first_name = request.POST.get("first_name")
-        user.last_name = request.POST.get("last_name")
-        user.save()
+            password_rematch = True
 
-        if user is not None:
-            login(request)
-            return HttpResponseRedirect("/")
-        else:
-            error = True
+        if user_exists is False and password_rematch is False and email_exists is False:
+            user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name, password=password1)
+            return HttpResponseRedirect("/login")
+
     return render(request, "signup.html", {
-        "user": request.user
+        "user": request.user,
+        "pass_rematch": password_rematch,
+        "email_exists": email_exists,
+        "user_exists": user_exists
     })
 
 
@@ -53,12 +58,15 @@ def login_(request):
             error = True
     return render(request, "login.html", {
         "error": error,
-        "user": request.user
     })
-
 
 
 def logout_(request):
     logout(request)
     return HttpResponseRedirect("/")
 
+
+def contact(request):
+    return render(request, "contactus.html", {
+        "user": request.user
+    })
