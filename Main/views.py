@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -69,6 +70,10 @@ def logout_(request):
 def contact(request):
     message = ""
     if request.POST:
+        title = request.POST.get("title")
+        text = request.POST.get("text")
+        email = request.POST.get("email")
+        send_mail(subject=title, message=text, from_email=email, recipient_list=["ostadju@fastmail.com"])
         message = "درخواست شما ثبت شد"
     return render(request, "contactus.html", {
         "user": request.user,
