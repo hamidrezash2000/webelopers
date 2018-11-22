@@ -10,8 +10,15 @@
         <a href="/signup" id=id_navbar_signup>ثبت نام</a> |
         <a href="/login" id=id_navbar_login>ورود</a>
     </nav>
-    <form method="post" action="/signup">
-        <input type="text" placeholder="نام" name="firstname" id="id_first_name"/>
+    <form method="post" action=".">
+        {% csrf_token %}
+        <input type="text" placeholder="نام" name="first_name" id="id_first_name"/><br/>
+        <input type="text" placeholder="نام خانوادگی" name="last_name" id="id_last_name"/><br/>
+        <input type="email" placeholder="ایمیل" name="email" id="id_email"/><br/>
+        <input type="text" placeholder="نام کاربری" name="username" id="id_username"/><br/>
+        <input type="password" placeholder="رمز عبور" name="password1" id="id_password1"/><br/>
+        <input type="password" placeholder="تکرار رمز عبور" name="password2" id="id_password2"/><br/>
+        <input type="submit" value="ثبت نام" name="submit" id="id_submit"/>
     </form>
 </body>
 </html>
