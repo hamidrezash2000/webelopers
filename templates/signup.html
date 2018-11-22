@@ -24,6 +24,8 @@
         <input type="text" placeholder="نام کاربری" name="username" id="id_username"/>{% if user_exists %}کاربری با نام کاربری وارد شده وجود دارد{% endif %}<br/>
         <input type="password" placeholder="رمز عبور" name="password1" id="id_password1"/><br/>
         <input type="password" placeholder="تکرار رمز عبور" name="password2" id="id_password2"/>{% if pass_rematch %}گذرواژه و تکرار گذرواژه یکسان نیستند{% endif %}<br/>
+         استاد :<input type="radio" name="group" value="استاد" id="id_type_0"/><br/>
+        دانشجو :<input type="radio" name="group" value="دانشجو" id="id_type_1"/><br/>
         <input type="submit" value="ثبت نام" name="submit" id="id_submit"/>
     </form>
 </body>

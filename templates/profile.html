@@ -17,10 +17,23 @@
         <a href="/editprofile" id=id_edit_profile>ویرایش پروفایل</a>
         {% endif %}
     </nav>
+
     <li id="id_username">نام کاربری : {{ user.username }}</li>
     <li id="id_first_name">نام : {{ user.first_name }}</li>
     <li id="id_last_name">نام خانوادگی : {{ user.last_name }}</li>
-
+    <li id="id_gender">جنسیت :
+    {% if person.gender == 'M' %}
+        مرد
+    {% else %}
+        زن
+    {% endif %}
+    </li>
+    <li id="id_bio">بیوگرافی : {{ person.bio }}</li>
+    <img id="id_picture" src="/{{ person.picture }}"/>
+    <br/>
+    {% if user.is_authenticated %}
+    شما به عنوان {{ group }} وارد شده اید
+    {% endif %}
 
 </body>
 </html>
