@@ -21,10 +21,10 @@ def index(request):
         group = "دانشجو"
 
     if request.GET:
-        usersSearched1 = User.objects.filter(username__contains=request.GET.get("search"), groups__name__icontains="استاد")
-        usersSearched2 = User.objects.filter(first_name__contains=request.GET.get("search"), groups__name__icontains="استاد")
-        usersSearched3 = User.objects.filter(last_name__contains=request.GET.get("search"), groups__name__icontains="استاد")
-        usersSearched = list(set(chain(usersSearched1, usersSearched2, usersSearched3)))
+        usersSearched = User.objects.filter(username__contains=request.GET.get("search"), groups__name__icontains="استاد")
+        usersSearched |= User.objects.filter(first_name__contains=request.GET.get("search"), groups__name__icontains="استاد")
+        usersSearched |= User.objects.filter(last_name__contains=request.GET.get("search"), groups__name__icontains="استاد")
+        # list(set(chain(usersSearched1, usersSearched2, usersSearched3)))
         if request.GET.get("search") == '':
             usersSearched = []
     return render(request, "index.html", {
