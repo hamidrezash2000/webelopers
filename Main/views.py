@@ -45,7 +45,7 @@ def signup(request):
             user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name, password=password1)
             person = Person()
             person.user = user
-            person.picture = "/static/pictures/user.jpg"
+            person.picture = "/static/pictures/user.png"
             person.save()
             mygrp = Group.objects.get(name=request.POST.get("group","استاد"))
             mygrp.user_set.add(user)
@@ -120,6 +120,9 @@ def editprofile(request):
         person = Person.objects.get(user=request.user)
         person.bio = request.POST.get("bio")
         person.gender = request.POST.get("gender")
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
         # if request.FILES["picture"]:
         #     save_path = os.path.join(settings.STATIC_URL, 'pictures', request.FILES['picture'])
         #     path = default_storage.save(save_path, request.FILES['picture'])
