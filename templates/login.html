@@ -1,60 +1,27 @@
-<!DOCTYPE html>
-<html lang="fa">
-    <head>
-        <meta charset="UTF-8">
-        <title>ورود</title>
-        <link rel="stylesheet" href="https://cdn.rtlcss.com/semantic-ui/2.2.6/semantic.rtl.css" integrity="sha384-h/tGiTStmgbDQyTAdp2s5BfyXn7wmnFsn3vDaCPYck9YKkOuLAdjHi6y154TBVJ4" crossorigin="anonymous">
-        <script src="https://cdn.rtlcss.com/semantic-ui/2.2.6/semantic.min.js" integrity="sha384-kZT+CItOKWHYL+Rz37W2NEz60Pu2JJJ8wgzq+82VWsi3QM53eNFzQJZqzhPuyo63" crossorigin="anonymous"></script>
-
-    </head>
-    <body dir="rtl">
-        <nav class="ui pointing menu rtl" id="id_navbar">
-            <a class="item" href="/" id=id_navbar_home>صفحه اصلی</a>
-            {% if user.is_authenticated == False %}
-            <a class="item" href="/signup" id=id_navbar_signup>ثبت نام</a>
-            <a class="active item" href="/login" id=id_navbar_login>ورود</a>
-            {% else %}
-                <a class="item" href="/logout" id=id_navbar_logout>خروج</a>
-                <a class="item" href="/profile" id=id_navbar_profile>پروفایل</a>
-                <a class="item" href="/editprofile" id=id_edit_profile>ویرایش پروفایل</a>
-
-            {% endif %}
-            <a class="item" href="/contact" id=id_navbar_contact_us>تماس  با ما</a>
-            <div class="right menu">
-                <div class="item">
-                    <div class="ui transparent icon input">
-                        <input type="text" placeholder="جستجو...">
-                        <i class="search link icon"></i>
-                    </div>
-                </div>
+{% extends 'base_html.html' %}
+{% block content %}
+{% if error %}
+<div class="ui negative message">
+        <div class="header">
+            خطا
+        </div>
+    <p>نام کاربری یا گذرواژه غلط است</p>
+</div>
+{% endif %}
+<div class="ui form">
+    <form method="post", action=".">
+        {% csrf_token %}
+        <div class="two fields">
+            <div class="field">
+                <label>نام کاربری</label>
+                <input type="text" name="username" id="id_username"/>
             </div>
-        </nav>
-        <div class="ui segment">
-            {% if error %}
-            <div class="ui negative message">
-                    <div class="header">
-                        خطا
-                    </div>
-                <p>نام کاربری یا گذرواژه غلط است</p>
-            </div>
-            {% endif %}
-            <div class="ui form">
-                <form method="post", action=".">
-                    {% csrf_token %}
-                    <div class="two fields">
-                        <div class="field">
-                            <label>نام کاربری</label>
-                            <input type="text" name="username" id="id_username"/>
-                        </div>
-                        <div class="field">
-                            <label>رمز عبور</label>
-                            <input type="password" name="password" id="id_password"/>
-                        </div>
-                    </div>
-                    <input class="ui submit button" type="submit" value="ورود" name="submit" id="id_submit"/>
-                </form>
+            <div class="field">
+                <label>رمز عبور</label>
+                <input type="password" name="password" id="id_password"/>
             </div>
         </div>
-
-    </body>
-</html>
+        <input class="ui submit button" type="submit" value="ورود" name="submit" id="id_submit"/>
+    </form>
+</div>
+{% endblock %}

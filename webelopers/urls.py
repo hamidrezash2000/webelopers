@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls.static import static
 from Main import views
 from webelopers import settings
@@ -29,4 +29,7 @@ urlpatterns = [
     path('profile/<str:username>', views.profile),
     path('editprofile/', views.editprofile),
     path('contact', views.contact),
+    path('setmeeting', views.setmeeting),
+    path('removeuser', views.removeuser),
+    path('search_teachers_api/', views.json_query),
 ] + static(settings.STATIC_URL, document_root=settings.SITE_ROOT)

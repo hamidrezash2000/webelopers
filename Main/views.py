@@ -1,10 +1,12 @@
 import os
+from itertools import chain
 
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import User, Group
+from django.contrib.sessions import serializers
 from django.core.files.storage import FileSystemStorage, default_storage
 from django.core.mail import send_mail
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from Main.models import Person, Meeting
 from webelopers import settings
@@ -19,7 +21,11 @@ def index(request):
 
     if request.GET:
         usersSearched = User.objects.filter(username__contains=request.GET.get("search"), groups__name__icontains="استاد")
-
+        usersSearched |= User.objects.filter(first_name__contains=request.GET.get("search"), groups__name__icontains="استاد")
+        usersSearched |= User.objects.filter(last_name__contains=request.GET.get("search"), groups__name__icontains="استاد")
+        # list(set(chain(usersSearched1, usersSearched2, usersSearched3)))
+        if request.GET.get("search") == '':
+            usersSearched = []
     return render(request, "index.html", {
         "user": request.user,
         "group": group,
@@ -128,8 +134,11 @@ def editprofile(request):
 
         person = Person.objects.get(user=request.user)
         person.bio = request.POST.get("bio")
+
         person.gender = request.POST.get("gender")
-        
+
+        person.picture = request.FILES.get("picture")
+        print(request.FILES)
         person.save()
 
         return HttpResponseRedirect("/profile")
@@ -137,6 +146,11 @@ def editprofile(request):
         "user": request.user,
         "person": Person.objects.get(user=request.user),
     })
+
+
+def removeuser(request):
+    request.user.delete()
+    return HttpResponseRedirect("/login")
 
 
 def setmeeting(request):
@@ -147,4 +161,8 @@ def setmeeting(request):
         start = request.POST.get("start")
         end = request.POST.get("end")
         meeting.teacher = request.user
-        
+        meeting.start = start
+        meeting.end = end
+        meeting.date = date
+        meeting.save()
+

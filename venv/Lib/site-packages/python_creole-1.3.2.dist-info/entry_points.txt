@@ -1,0 +1,6 @@
+[console_scripts]
+creole2html = creole.cmdline:cli_creole2html
+html2creole = creole.cmdline:cli_html2creole
+html2rest = creole.cmdline:cli_html2rest
+html2textile = creole.cmdline:cli_html2textile
+
