@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>edit profile</title>
+    <title>ویرایش پروفایل</title>
 </head>
 <body>
     <nav id="id_navbar">
@@ -17,10 +17,17 @@
         {% endif %}
     </nav>
 
-    <form method="post" action=".">
+    <form method="post" action="." enctype="multipart/form-data; boundary=BoUnDaRyStRiNg">
         {% csrf_token %}
-        <input type="text" placeholder="نام" name="first_name" id="id_first_name"/><br/>
-        <input type="text" placeholder="نام خانوادگی" name="last_name" id="id_last_name"/><br/>
+        <input type="text" placeholder="نام" value="{{ user.first_name }}" name="first_name" id="id_first_name"/><br/>
+        <input type="text" placeholder="نام خانوادگی" value="{{ user.last_name }}" name="last_name" id="id_last_name"/><br/>
+        <textarea name="bio" placeholder="زندگی نامه" id="id_bio">{{ person.bio }}</textarea><br/>
+        <select name="gender" id="id_gender">
+            <option value="M" {% if person.gender == 'M' %} selected {% endif %}>مرد</option>
+            <option value="F" {% if person.gender == 'F' %} selected {% endif %}>زن</option>
+        </select><br/>
+        <img id="id_picture" src="/{{ person.picture }}"/><br/>
+        <input type="file" id="id_picture" name="picture"/>
         <input type="submit" value="ویرایش" name="submit" id="id_submit"/>
     </form>
 

@@ -1,15 +1,23 @@
+import os
+
 from django.contrib.auth import authenticate, logout, login
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from django.core.files.storage import FileSystemStorage, default_storage
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
-# Create your views here.
+from Main.models import Person
+from webelopers import settings
 
 
 def index(request):
+    if request.user.groups.filter(name="استاد"):
+        group = "استاد"
+    else:
+        group = "دانشجو"
     return render(request, "index.html", {
-        "user": request.user
+        "user": request.user,
+        "group": group
     })
 
 
@@ -33,7 +41,12 @@ def signup(request):
 
         if user_exists is False and password_rematch is False and email_exists is False:
             user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name, password=password1)
-            return HttpResponseRedirect("/login")
+            person = Person()
+            person.user = user
+            person.save()
+            mygrp = Group.objects.get(name=request.POST.get("group", "استاد"))
+            mygrp.user_set.add(user)
+            return HttpResponseRedirect("/")
 
     return render(request, "signup.html", {
         "user": request.user,
@@ -73,7 +86,7 @@ def contact(request):
         title = request.POST.get("title")
         text = request.POST.get("text")
         email = request.POST.get("email")
-        send_mail(subject=title, message=text, from_email=email, recipient_list=["ostadju@fastmail.com"])
+        # send_mail(subject=title, message=text, from_email=email, recipient_list=["ostadju@fastmail.com"])
         message = "درخواست شما ثبت شد"
     return render(request, "contactus.html", {
         "user": request.user,
@@ -82,9 +95,17 @@ def contact(request):
 
 
 def profile(request):
-    return render(request, "profile.html",{
-        "user": request.user
+    if request.user.groups.filter(name="استاد"):
+        group = "استاد"
+    else:
+        group = "دانشجو"
+    person = Person.objects.get(user=request.user)
+    return render(request, "profile.html", {
+        "user": request.user,
+        "person": person,
+        "group": group
     })
+
 
 def editprofile(request):
     if request.POST:
@@ -92,7 +113,18 @@ def editprofile(request):
         user.first_name = request.POST.get("first_name")
         user.last_name = request.POST.get("last_name")
         user.save()
+
+        person = Person.objects.get(user=request.user)
+        person.bio = request.POST.get("bio")
+        person.gender = request.POST.get("gender")
+        if request.FILES["picture"]:
+            save_path = os.path.join(settings.STATIC_URL, 'pictures', request.FILES['picture'])
+            path = default_storage.save(save_path, request.FILES['picture'])
+            person.picture = default_storage.path(path)
+        person.save()
+
         return HttpResponseRedirect("/profile")
     return render(request, "editprofile.html", {
         "user": request.user,
+        "person": Person.objects.get(user=request.user),
     })

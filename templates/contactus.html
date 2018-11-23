@@ -1,29 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>ثبت نام</title>
-</head>
-<body>
-    <nav id="id_navbar">
-        <a href="/" id=id_navbar_home>صفحه اصلی</a> |
-        <a href="/signup" id=id_navbar_signup>ثبت نام</a> |
-        <a href="/contact" id=id_navbar_contact_us>تماس با ما</a> |
-        {% if not user.is_authenticated %}
-        <a href="/login" id=id_navbar_login>ورود</a>
-        {% else %}
-        <a href="/logout" id=id_navbar_logout>خروج</a> |
-        <a href="/profile" id=id_navbar_profile>پروفایل</a>
-        {% endif %}
-    </nav>
+<html lang="fa">
+    <head>
+        <meta charset="UTF-8">
+        <title>ارتباط با ما</title>
+        <link rel="stylesheet" href="https://cdn.rtlcss.com/semantic-ui/2.2.6/semantic.rtl.css" integrity="sha384-h/tGiTStmgbDQyTAdp2s5BfyXn7wmnFsn3vDaCPYck9YKkOuLAdjHi6y154TBVJ4" crossorigin="anonymous">
+        <script src="https://cdn.rtlcss.com/semantic-ui/2.2.6/semantic.min.js" integrity="sha384-kZT+CItOKWHYL+Rz37W2NEz60Pu2JJJ8wgzq+82VWsi3QM53eNFzQJZqzhPuyo63" crossorigin="anonymous"></script>
+    </head>
+    <body dir="rtl">
+        <nav class="ui pointing menu rtl" id="id_navbar">
+            <a class="item" href="/" id=id_navbar_home>صفحه اصلی</a>
+            {% if user.is_authenticated == False %}
+            <a class="item" href="/signup" id=id_navbar_signup>ثبت نام</a>
+            <a class="item" href="/login" id=id_navbar_login>ورود</a>
+            {% else %}
+                <a class="item" href="/logout" id=id_navbar_logout>خروج</a>
+                <a class="item" href="/profile" id=id_navbar_profile>پروفایل</a>
+                <a class="item" href="/editprofile" id=id_edit_profile>ویرایش پروفایل</a>
 
-    <form method="post" action="/contact">
-        {% csrf_token %}
-        <input type="text" placeholder="عنوان" name="title" id="id_title" maxlength="40"/><br/>
-        <input type="email" placeholder="ایمیل" name="email" id="id_email"/><br/>
-        <textarea placeholder="متن" name="text" id="id_text" minlength="10" maxlength="250"></textarea><br/>
-        <input type="submit" value="ثبت" name="submit" id="id_submit"/>
-    </form>
-    <br/>{{ message }}
-</body>
+            {% endif %}
+            <a class="item active" href="/contact" id=id_navbar_contact_us>تماس  با ما</a>
+            <div class="right menu">
+                <div class="item">
+                    <div class="ui transparent icon input">
+                        <input type="text" placeholder="جستجو...">
+                        <i class="search link icon"></i>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="ui segment">
+            {% if message != "" %}
+            <div class="ui success message">
+                    <div class="header">
+                        {{ message }}
+                    </div>
+                <p>پیام شما با موفقیت ارسال شد</p>
+            </div>
+            {% endif %}
+            <div class="ui form">
+                <form method="post", action="/contact">
+                    {% csrf_token %}
+                    <div class="two fields">
+                        <div class="field">
+                            <label>عنوان</label>
+                            <input type="text" name="title" id="id_title" maxlength="40"/>
+                        </div>
+                        <div class="field">
+                            <label>ایمیل</label>
+                            <input type="email" name="email" id="id_email" maxlength="40"/>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>متن</label>
+                        <textarea name="text" id="id_text" minlength="10" maxlength="250"></textarea>
+                    </div>
+                    <input class="ui submit button" type="submit" value="ثبت" name="submit" id="id_submit"/>
+                </form>
+            </div>
+        </div>
+    </body>
 </html>
