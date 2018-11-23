@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="efc6e0a7-e0dd-4bcb-bc23-c40354d10f8f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base_html.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base_html.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/newmeeting.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/newmeeting.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/venv/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,7 +38,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Django Console" value="16" />
-          <entry key="html" value="1538" />
+          <entry key="html" value="1651" />
           <entry key="py" value="3584" />
           <entry key="py@webelopers" value="86" />
         </counts>
@@ -49,20 +46,20 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CommandLine" value="20" />
-          <entry key="HTML" value="1538" />
+          <entry key="HTML" value="1651" />
           <entry key="PLAIN_TEXT" value="66" />
           <entry key="Python" value="3600" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="html" value="21" />
+          <entry key="html" value="22" />
           <entry key="py" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="HTML" value="21" />
+          <entry key="HTML" value="22" />
           <entry key="Python" value="8" />
         </counts>
       </usages-collector>
@@ -129,7 +126,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webelopers/urls.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="124">
@@ -137,6 +134,15 @@
               <folding>
                 <element signature="e#634#666#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/templates/newmeeting.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="190">
+              <caret line="59" column="61" selection-start-line="59" selection-start-column="61" selection-end-line="59" selection-end-column="61" />
             </state>
           </provider>
         </entry>
@@ -227,7 +233,6 @@
         <option value="$PROJECT_DIR$/templates/basic_layout.html" />
         <option value="$PROJECT_DIR$/venv/Lib/site-packages/django_markdown/utils.py" />
         <option value="$PROJECT_DIR$/Main/models.py" />
-        <option value="$PROJECT_DIR$/templates/newmeeting.html" />
         <option value="$PROJECT_DIR$/webelopers/urls.py" />
         <option value="$PROJECT_DIR$/templates/signup.html" />
         <option value="$PROJECT_DIR$/templates/index.html" />
@@ -238,6 +243,7 @@
         <option value="$PROJECT_DIR$/Main/views.py" />
         <option value="$PROJECT_DIR$/templates/base_html.html" />
         <option value="$PROJECT_DIR$/templates/profile.html" />
+        <option value="$PROJECT_DIR$/templates/newmeeting.html" />
       </list>
     </option>
   </component>
@@ -399,13 +405,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/newmeeting.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="22" column="39" selection-start-line="22" selection-start-column="39" selection-end-line="22" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Main/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
@@ -491,6 +490,13 @@
           <folding>
             <element signature="e#634#666#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/newmeeting.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="59" column="61" selection-start-line="59" selection-start-column="61" selection-end-line="59" selection-end-column="61" />
         </state>
       </provider>
     </entry>
