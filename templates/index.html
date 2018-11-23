@@ -30,6 +30,26 @@
         </nav>
         <div class="ui segment">
             <p>سلام. به سامانه استادجو خوش آمدید.</p>
+            {% if userSearched %}
+                <table class="ui celled table">
+                    <thead>
+                        <tr>
+                            <th>نام کاربری</th>
+                            <th>نام</th>
+                            <th>نام خانوادگی</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for record in userSearched %}
+                        <tr>
+                            <td data-label="نام کاربری">{{ record.username }}</td>
+                            <td data-label="نام">{{ record.first_name }}</td>
+                            <td data-label="نام خانوادگی">{{ record.last_name }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
         </div>
 
     </body>
