@@ -6,9 +6,9 @@
             <img id="id_picture" src="/{{ person.picture }}">
         </div>
         <div class="content">
-            <a class="header">{{ user.first_name }} {{ user.last_name }}</a>
+            <a class="header"><b id="id_first_name">{{ user.first_name }}</b><b id="id_last_name">{{ user.last_name }}</b></a>
             <div class="meta">
-                <span>{{ user.username }} / {% if person.gender == 'M' %}مرد{% else %}زن{% endif %}</span>
+                <span><b id="id_username">{{ user.username }}</b> / {% if person.gender == 'M' %}مرد{% else %}زن{% endif %}</span>
             </div>
             <div class="description">
                 <p>

@@ -9,6 +9,7 @@
     <body dir="rtl">
         <nav class="ui pointing menu rtl" id="id_navbar">
             <a class="item" href="/" id=id_navbar_home>صفحه اصلی</a>
+
             {% if user.is_authenticated == False %}
             <a class="item" href="/signup" id=id_navbar_signup>ثبت نام</a>
             <a class="item" href="/login" id=id_navbar_login>ورود</a>

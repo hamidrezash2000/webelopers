@@ -65,7 +65,7 @@ def signup(request):
             mygrp = Group.objects.get(name=request.POST.get("group", "استاد"))
             mygrp.user_set.add(user)
 
-            login(request, user)
+            # login(request, user)
             return HttpResponseRedirect("/")
 
     return render(request, "signup.html", {
@@ -189,12 +189,12 @@ def json_query(request):
         usersSearched = []
     result_json = "[ "
     for teacher in usersSearched:
-        result_json += "{ 'first_name' : '%s', 'last_name' : '%s', 'profile_url' : '/profile/%s' }, " % (teacher.first_name, teacher.last_name, teacher.username)
+        result_json += '{ "first_name" : "%s", "last_name" : "%s", "profile_url" : "/profile/%s" }, ' % (teacher.first_name, teacher.last_name, teacher.username)
 
     if len(result_json) > 3:
         result_json = result_json[:-2]
     result_json += " ]"
-    return HttpResponse(result_json)
+    return HttpResponse(result_json, content_type="application/json")
 
 
 # class TeacherView(object):

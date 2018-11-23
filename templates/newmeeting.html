@@ -36,9 +36,11 @@
                         خطا
                     </div>
                 <p>
-                    {% if date_unvalid %}تاریخ وارد شده معتبر نمیباشد<br/>{% endif %}
-                    {% if user_exists %}کاربری با نام کاربری وارد شده وجود دارد<br/>{% endif %}
-                    {% if pass_rematch %}گذرواژه و تکرار گذرواژه یکسان نیستند{% endif %}
+                    {% if date_invalid %}تاریخ وارد شده معتبر نمیباشد<br/>{% endif %}
+                    {% if start_time_invalid %}زمان شروع وارد شده معتبر نمیباشد<br/>{% endif %}
+                    {% if end_time_invalid %}زمان پایان وارد شده معتبر نمیباشد{% endif %}
+                    {% if end_before_start %}زمان شروع باید قبل از زمان پایان فرصت باشد{% endif %}
+                    {% if has_subscription %}بازه زمانی انتخاب شده با فرصت های قبلی شما اشتراک دارد{% endif %}
                 </p>
             </div>
             {% endif %}
