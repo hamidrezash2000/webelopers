@@ -1,3 +1,5 @@
+from datetime import datetime
+import datetime as datetime2
 import os
 from itertools import chain
 
@@ -7,9 +9,8 @@ from django.core.files.storage import FileSystemStorage, default_storage
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render
-from rest_framework import serializers
 
-from Main.models import Person
+from Main.models import Person, Meeting
 from webelopers import settings
 
 
@@ -116,7 +117,7 @@ def contact(request):
         title = request.POST.get("title")
         text = request.POST.get("text")
         email = request.POST.get("email")
-        # send_mail(subject=title, message=text, from_email=email, recipient_list=["ostadju@fastmail.com"])
+        send_mail(subject=title, message=text, from_email=email, recipient_list=["ostadju@fastmail.com"])
         message = "درخواست شما ثبت شد"
     return render(request, "contactus.html", {
         "user": request.user,
@@ -168,9 +169,6 @@ def editprofile(request):
         "group": group,
     })
 
-def setmeeting():
-    pass
-
 
 def removeuser(request):
     request.user.delete()
@@ -197,18 +195,102 @@ def json_query(request):
     return HttpResponse(result_json, content_type="application/json")
 
 
-# class TeacherView(object):
-#     def __init__(self, username, fn, ln):
-#         self.first_name = fn
-#         self.last_name = ln
-#         self.profile_url = "/profile/" + username
-#
-#
-# class TeacherViewSerializer(serializers.Serializer):
-#     first_name = serializers.CharField(max_length=100)
-#     last_name = serializers.CharField(max_length=100)
-#     profile_url = serializers.CharField(max_length=256)
-#     # def __init__(self, username, fn, ln):
-#     #     self.first_name = fn
-#     #     self.last_name = ln
-#     #     self.profile_url = "/profile/" + username
+def setmeeting(request):
+    start_invalid = False
+    end_invalid = False
+    date_invalid = False
+    end_before_start = False
+    tadakhol = False
+    if request.user.groups.filter(name="استاد"):
+        group = "استاد"
+    else:
+        group = "دانشجو"
+    user = request.user
+    if request.POST:
+        cap = request.POST.get("capacity")
+        start = request.POST.get("start")
+        end = request.POST.get("end")
+        date = request.POST.get("date")
+        try:
+            start_datetime = datetime.strptime(start, "%H:%M:%S")
+        except:
+            start_invalid = True
+        try:
+            end_datetime = datetime.strptime(end, "%H:%M:%S")
+        except:
+            end_invalid = True
+        try:
+            date_datetime = datetime2.datetime.strptime(date, "%Y-%m-%d")
+        except:
+            date_invalid = True
+        if end_invalid is False and start_invalid is False:
+            if end_datetime < start_datetime:
+                end_before_start = True
+
+        if end_before_start is False and start_invalid is False and end_invalid is False and date_invalid is False:
+            meeting = Meeting()
+            meeting.capacity = cap
+            meeting.start = start_datetime.time()
+            meeting.end = end_datetime.time()
+
+            meeting.teacher = user
+            meeting.date = date_datetime.date()
+
+            meetings = Meeting.objects.filter(teacher=request.user)
+            print(type(meeting.date))
+
+            for bm in meetings:
+                if datetime.strftime(bm.date, "%Y%m%d") == datetime.strftime(meeting.date, "%Y%m%d"):
+                    if meeting.start < bm.end and meeting.start > bm.start:
+                        tadakhol = True
+                    if meeting.end < bm.end and meeting.end > bm.start:
+                        tadakhol = True
+
+            if tadakhol:
+                return render(request, "newmeeting.html", {
+                    "user": user,
+                    "group": group,
+                    "serror": start_invalid,
+                    "derror": date_invalid,
+                    "eerror": end_invalid,
+                    "ebs": end_before_start,
+                    "tdk": tadakhol,
+                })
+            meeting.save()
+            return HttpResponseRedirect("/")
+    return render(request, "newmeeting.html", {
+        "user": user,
+        "group": group,
+        "serror": start_invalid,
+        "derror": date_invalid,
+        "eerror": end_invalid,
+        "ebs": end_before_start,
+        "tdk": tadakhol,
+    })
+
+# def setmeeting(request):
+#     print("Salam1")
+#     if request.user.groups.filter(name="استاد"):
+#         group = "استاد"
+#     else:
+#         group = "دانشجو"
+#     print(request.POST.get("date"))
+#     if request.POST:
+#         print("Salam2")
+#         meeting = Meeting()
+#         meeting.capacity = request.POST.get("capacity")
+#         date = request.POST.get("date")
+#         start = request.POST.get("start")
+#         end = request.POST.get("end")
+#         meeting.teacher = request.user
+#         meeting.start = start
+#         meeting.end = end
+#         meeting.date = date
+#         meeting.save()
+#         return HttpResponseRedirect("/setmeeting")
+#     else:
+#         return render(request, "newmeeting.html", {
+#             "user": request.user,
+#             "group": group,
+#         })
+

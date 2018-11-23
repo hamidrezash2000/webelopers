@@ -1,67 +1,35 @@
-<!DOCTYPE html>
-<html lang="fa">
-    <head>
-        <meta charset="UTF-8">
-        <title>New Meeting</title>
-        <link rel="stylesheet" href="https://cdn.rtlcss.com/semantic-ui/2.2.6/semantic.rtl.css" integrity="sha384-h/tGiTStmgbDQyTAdp2s5BfyXn7wmnFsn3vDaCPYck9YKkOuLAdjHi6y154TBVJ4" crossorigin="anonymous">
-        <script src="https://cdn.rtlcss.com/semantic-ui/2.2.6/semantic.min.js" integrity="sha384-kZT+CItOKWHYL+Rz37W2NEz60Pu2JJJ8wgzq+82VWsi3QM53eNFzQJZqzhPuyo63" crossorigin="anonymous"></script>
-    </head>
-    <body dir="rtl">
-        <nav class="ui pointing menu rtl" id="id_navbar">
-                <a class="item" href="/signup" id=id_navbar_signup>ثبت نام</a>
-                <a class="item" href="/login" id=id_navbar_login>ورود</a>
-                <a class="item" href="/logout" id=id_navbar_logout>خروج</a>
-                <a class="item" href="/profile" id=id_navbar_profile>پروفایل</a>
-                <a class="item" href="/editprofile" id=id_edit_profile>ویرایش پروفایل</a>
-                {% if group == "استاد" %}
-                    <a class="item" href="/setmeeting" id=id_navbar_meeting>ایجاد Meeting</a>
-                {% endif %}
-                <a class="item" href="/contact" id=id_navbar_contact_us>تماس  با ما</a>
-            <div class="right menu">
-                <div class="item">
-                    <div class="ui transparent icon input">
-                        <form action="/" method="get">
-                            {% csrf_token %}
-                            <input type="text" name="search" id="id_search_profiles_input" placeholder="جستجو..."/>
-                            <button id="id_search_profiles_button" >جستجو</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </nav>
-        <div class="ui segment">
-            {% if pass_rematch or email_exists or user_exists %}
-            <div class="ui negative message">
-                    <div class="header">
-                        خطا
-                    </div>
-                <p>
-                    {% if date_invalid %}تاریخ وارد شده معتبر نمیباشد<br/>{% endif %}
-                    {% if start_time_invalid %}زمان شروع وارد شده معتبر نمیباشد<br/>{% endif %}
-                    {% if end_time_invalid %}زمان پایان وارد شده معتبر نمیباشد{% endif %}
-                    {% if end_before_start %}زمان شروع باید قبل از زمان پایان فرصت باشد{% endif %}
-                    {% if has_subscription %}بازه زمانی انتخاب شده با فرصت های قبلی شما اشتراک دارد{% endif %}
-                </p>
-            </div>
-            {% endif %}
-            <div class="ui form">
-                <form method="post", action=".">
-                    {% csrf_token %}
-                    <div class="field">
-                        <input type="text" placeholder="ظرفیت" name="capacity" id="id_student_capacity"/>
-                    </div>
-                    <div class="field">
-                        <input type="text" placeholder="زمان شروع" name="start" id="id_start"/>
-                    </div>
-                    <div class="field">
-                        <input type="text" placeholder="زمان پایان" name="end" id="id_end"/>
-                    </div>
-                    <div class="field">
-                        <input type="text" placeholder="تاریخ" name="date" id="id_date"/>
-                    </div>
-                    <input class="ui submit button" type="submit" value="ثبت نام" name="submit" id="id_submit"/>
-                </form>
-            </div>
+{% extends 'base_html.html' %}
+{% block content %}
+{% if eerror or serror or derror or ebs or tdk%}
+<div class="ui negative message">
+        <div class="header">
+            خطا
         </div>
-    </body>
-</html>
+    <p>
+        {% if eerror %}زمان پایان وارد شده معتبر نمی باشد<br/>{% endif %}
+        {% if serror %}زمان شروع وارد شده معتبر نمی باشد<br/>{% endif %}
+        {% if derror %}تاریخ وارد شده معتبر نمی باشد<br/>{% endif %}
+        {% if ebs %}زمان شروع باید قبل از زمان پایان فرصت باشد<br/>{% endif %}
+        {% if tdk %}بازه زمانی انتخاب شده با فرصت های قبلی شما اشتراک دارد{% endif %}
+    </p>
+</div>
+{% endif %}
+<div class="ui form">
+    <form method="post" action=".">
+        {% csrf_token %}
+        <div class="field">
+            <input type="text" placeholder="ظرفیت" name="capacity" id="id_student_capacity"/>
+        </div>
+        <div class="field">
+            <input type="text" placeholder="شروع" name="start" id="id_start"/>
+        </div>
+        <div class="field">
+            <input type="text" name="end" id="id_end" placeholder="پایان"/>
+        </div>
+        <div class="field">
+            <input type="text" name="date" id="id_date" placeholder="تاریخ"/>
+        </div>
+        <input class="ui submit button" type="submit" value="ایجاد" name="submit" id="id_submit"/>
+    </form>
+</div>
+{% endblock %}

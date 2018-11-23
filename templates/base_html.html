@@ -13,11 +13,13 @@
             {% if user.is_authenticated == False %}
             <a class="item" href="/signup" id=id_navbar_signup>ثبت نام</a>
             <a class="item" href="/login" id=id_navbar_login>ورود</a>
-            {% else %}
+            {% endif %}
+                {% if group == 'استاد' %}
+                    <a class="item" href="/setmeeting" id=id_navbar_meeting>ایجاد فرصت ملاقات</a>
+                {% endif %}
                 <a class="item" href="/logout" id=id_navbar_logout>خروج</a>
                 <a class="item" href="/profile" id=id_navbar_profile>پروفایل</a>
                 <a class="item" href="/editprofile" id=id_edit_profile>ویرایش پروفایل</a>
-            {% endif %}
             <a class="item" href="/contact" id=id_navbar_contact_us>تماس  با ما</a>
             <div class="right menu">
                 <div class="item">
