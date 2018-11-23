@@ -9,15 +9,15 @@
     <body dir="rtl">
         <nav class="ui pointing menu rtl" id="id_navbar">
             <a class="active item" href="/" id=id_navbar_home>صفحه اصلی</a>
-            {% if user.is_authenticated == False %}
-            <a class="item" href="/signup" id=id_navbar_signup>ثبت نام</a>
-            <a class="item" href="/login" id=id_navbar_login>ورود</a>
-            {% else %}
+
+                <a class="item" href="/signup" id=id_navbar_signup>ثبت نام</a>
+                <a class="item" href="/login" id=id_navbar_login>ورود</a>
+
                 <a class="item" href="/logout" id=id_navbar_logout>خروج</a>
                 <a class="item" href="/profile" id=id_navbar_profile>پروفایل</a>
                 <a class="item" href="/editprofile" id=id_edit_profile>ویرایش پروفایل</a>
 
-            {% endif %}
+
             <a class="item" href="/contact" id=id_navbar_contact_us>تماس  با ما</a>
             <div class="right menu">
                 <div class="item">
@@ -33,6 +33,30 @@
         </nav>
         <div class="ui segment">
             <p>سلام. به سامانه استادجو خوش آمدید.</p>
+            {% if usersSearched %}
+                <table class="ui celled table">
+                    <thead>
+                        <tr>
+                            <th>نام کاربری</th>
+                            <th>نام</th>
+                            <th>نام خانوادگی</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for record in usersSearched %}
+
+
+                        <tr id="id_teacher_{{ forloop.counter0 }}">
+                            <td data-label="نام کاربری"><a id="id_username" href="/profile/{{ record.username }}">{{ record.username }}</a></td>
+                            <td data-label="نام" id="id_first_name">{{ record.first_name }}</td>
+                            <td data-label="نام خانوادگی" id="id_last_name">{{ record.last_name }}</td>
+                        </tr>
+
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
         </div>
 
 

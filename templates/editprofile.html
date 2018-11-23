@@ -1,36 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>ویرایش پروفایل</title>
-</head>
-<body>
-    <nav id="id_navbar">
-        <a href="/" id=id_navbar_home>صفحه اصلی</a> |
-        <a href="/signup" id=id_navbar_signup>ثبت نام</a> |
-        <a href="/contact" id=id_navbar_contact_us>تماس با ما</a> |
-        {% if not user.is_authenticated %}
-        <a href="/login" id=id_navbar_login>ورود</a>
-        {% else %}
-        <a href="/logout" id=id_navbar_logout>خروج</a> |
-        <a href="/profile" id=id_navbar_profile>پروفایل</a>
-        {% endif %}
-    </nav>
+    <head>
+        <meta charset="UTF-8">
+        <title>ویرایش پروفایل</title>
+        <link rel="stylesheet" href="https://cdn.rtlcss.com/semantic-ui/2.2.6/semantic.rtl.css" integrity="sha384-h/tGiTStmgbDQyTAdp2s5BfyXn7wmnFsn3vDaCPYck9YKkOuLAdjHi6y154TBVJ4" crossorigin="anonymous">
+        <script src="https://cdn.rtlcss.com/semantic-ui/2.2.6/semantic.min.js" integrity="sha384-kZT+CItOKWHYL+Rz37W2NEz60Pu2JJJ8wgzq+82VWsi3QM53eNFzQJZqzhPuyo63" crossorigin="anonymous"></script>
+    </head>
+    <body dir="rtl">
+        <nav class="ui pointing menu rtl" id="id_navbar">
+            <a class="item" href="/" id=id_navbar_home>صفحه اصلی</a>
+            {% if user.is_authenticated == False %}
+            <a class="item" href="/signup" id=id_navbar_signup>ثبت نام</a>
+            <a class="item" href="/login" id=id_navbar_login>ورود</a>
+            {% else %}
+                <a class="item" href="/logout" id=id_navbar_logout>خروج</a>
+                <a class="item" href="/profile" id=id_navbar_profile>پروفایل</a>
+                <a class="active item" href="/editprofile" id=id_edit_profile>ویرایش پروفایل</a>
 
-    <form method="post" action="." enctype="multipart/form-data; boundary=BoUnDaRyStRiNg">
-        {% csrf_token %}
-        <input type="text" placeholder="نام" value="{{ user.first_name }}" name="first_name" id="id_first_name"/><br/>
-        <input type="text" placeholder="نام خانوادگی" value="{{ user.last_name }}" name="last_name" id="id_last_name"/><br/>
-        <textarea name="bio" placeholder="زندگی نامه" id="id_bio">{{ person.bio }}</textarea><br/>
-        <select name="gender" id="id_gender">
-            <option value="M" {% if person.gender == 'M' %} selected {% endif %}>مرد</option>
-            <option value="F" {% if person.gender == 'F' %} selected {% endif %}>زن</option>
-        </select><br/>
-        <img id="id_picture" src="/{{ person.picture }}"/><br/>
-        <input type="file" id="id_picture" name="picture"/>
-        <input type="submit" value="ویرایش" name="submit" id="id_submit"/>
-    </form>
+            {% endif %}
+            <a class="item" href="/contact" id=id_navbar_contact_us>تماس  با ما</a>
+            <div class="right menu">
+                <div class="item">
+                    <div class="ui transparent icon input">
+                        <form action="/" method="get">
+                            {% csrf_token %}
+                            <input type="text" name="search" id="id_search_profiles_input" placeholder="جستجو..."/>
+                            <input type="submit" id="id_search_profiles_button" value="جستجو"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="ui segment">
+            {% if pass_rematch or email_exists or user_exists %}
+            <div class="ui negative message">
+                    <div class="header">
+                        خطا
+                    </div>
+                <p>
+                    {% if email_exists %}کاربری با ایمیل وارد شده وجود دارد<br/>{% endif %}
+                    {% if user_exists %}کاربری با نام کاربری وارد شده وجود دارد<br/>{% endif %}
+                    {% if pass_rematch %}گذرواژه و تکرار گذرواژه یکسان نیستند{% endif %}
+                </p>
+            </div>
+            {% endif %}
+            <div class="ui form">
+                <form method="post" action="." enctype="multipart/form-data; boundary=BoUnDaRyStRiNg">
+                    {% csrf_token %}
+                    <div class="field">
+                        <input type="text" placeholder="نام" value="{{ user.first_name }}" name="first_name" id="id_first_name"/>
+                    </div>
+                    <div class="field">
+                        <input type="text" placeholder="نام خانوادگی" value="{{ user.last_name }}" name="last_name" id="id_last_name"/>
+                    </div>
+                    <div class="field">
+                        <textarea name="bio" placeholder="زندگی نامه" id="id_bio">{{ person.bio }}</textarea><br/>
+                    </div>
+                    <div class="field">
+                        <select name="gender" id="id_gender">
+                            <option value="M" {% if person.gender == 'M' %} selected {% endif %}>مرد</option>
+                            <option value="F" {% if person.gender == 'F' %} selected {% endif %}>زن</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <input type="file" id="id_picture" name="picture"/>
+                    </div>
+                    <input class="ui submit button" type="submit" value="ویرایش" name="submit" id="id_submit"/>
+                </form>
+            </div>
+        </div>
 
-
-</body>
+    </body>
 </html>

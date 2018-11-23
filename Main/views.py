@@ -53,6 +53,8 @@ def signup(request):
             person.save()
             mygrp = Group.objects.get(name=request.POST.get("group", "استاد"))
             mygrp.user_set.add(user)
+
+            login(request, user)
             return HttpResponseRedirect("/")
 
     return render(request, "signup.html", {
@@ -101,14 +103,17 @@ def contact(request):
     })
 
 
-def profile(request):
+def profile(request, username=""):
+    if username == "":
+        username = request.user.username
+    user = User.objects.filter(username=username)[0]
     if request.user.groups.filter(name="استاد"):
         group = "استاد"
     else:
         group = "دانشجو"
-    person = Person.objects.get(user=request.user)
+    person = Person.objects.get(user=user)
     return render(request, "profile.html", {
-        "user": request.user,
+        "user": user,
         "person": person,
         "group": group
     })
@@ -124,10 +129,7 @@ def editprofile(request):
         person = Person.objects.get(user=request.user)
         person.bio = request.POST.get("bio")
         person.gender = request.POST.get("gender")
-        if request.FILES["picture"]:
-            save_path = os.path.join(settings.STATIC_URL, 'pictures', request.FILES['picture'])
-            path = default_storage.save(save_path, request.FILES['picture'])
-            person.picture = default_storage.path(path)
+        
         person.save()
 
         return HttpResponseRedirect("/profile")
