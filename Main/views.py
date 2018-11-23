@@ -36,6 +36,10 @@ def index(request):
 
 
 def signup(request):
+    if request.user.groups.filter(name="استاد"):
+        group = "استاد"
+    else:
+        group = "دانشجو"
     user_exists = False
     email_exists = False
     password_rematch = False
@@ -68,11 +72,16 @@ def signup(request):
         "user": request.user,
         "pass_rematch": password_rematch,
         "email_exists": email_exists,
-        "user_exists": user_exists
+        "user_exists": user_exists,
+        "group": group,
     })
 
 
 def login_(request):
+    if request.user.groups.filter(name="استاد"):
+        group = "استاد"
+    else:
+        group = "دانشجو"
     error = False
     # if request.user.is_authenticated:
     #     return HttpResponseRedirect("/")
@@ -88,6 +97,7 @@ def login_(request):
             error = True
     return render(request, "login.html", {
         "error": error,
+        "group": group,
     })
 
 
@@ -97,6 +107,10 @@ def logout_(request):
 
 
 def contact(request):
+    if request.user.groups.filter(name="استاد"):
+        group = "استاد"
+    else:
+        group = "دانشجو"
     message = ""
     if request.POST:
         title = request.POST.get("title")
@@ -106,7 +120,8 @@ def contact(request):
         message = "درخواست شما ثبت شد"
     return render(request, "contactus.html", {
         "user": request.user,
-        "message": message
+        "message": message,
+        "group": group,
     })
 
 
@@ -122,11 +137,15 @@ def profile(request, username=""):
     return render(request, "profile.html", {
         "user": user,
         "person": person,
-        "group": group
+        "group": group,
     })
 
 
 def editprofile(request):
+    if request.user.groups.filter(name="استاد"):
+        group = "استاد"
+    else:
+        group = "دانشجو"
     if request.POST:
         user = request.user
         user.first_name = request.POST.get("first_name")
@@ -146,6 +165,7 @@ def editprofile(request):
     return render(request, "editprofile.html", {
         "user": request.user,
         "person": Person.objects.get(user=request.user),
+        "group": group,
     })
 
 def setmeeting():
@@ -157,21 +177,6 @@ def removeuser(request):
     return HttpResponseRedirect("/login")
 
 
-class TeacherView(object):
-    def __init__(self, username, fn, ln):
-        self.first_name = fn
-        self.last_name = ln
-        self.profile_url = "/profile/" + username
-
-
-class TeacherViewSerializer(serializers.Serializer):
-    first_name = serializers.CharField(max_length=100)
-    last_name = serializers.CharField(max_length=100)
-    profile_url = serializers.CharField(max_length=256)
-    # def __init__(self, username, fn, ln):
-    #     self.first_name = fn
-    #     self.last_name = ln
-    #     self.profile_url = "/profile/" + username
 
 
 def json_query(request):
@@ -182,9 +187,28 @@ def json_query(request):
     usersSearched = list(set(chain(usersSearched1, usersSearched2, usersSearched3)))
     if request.GET.get("query") == '':
         usersSearched = []
-    resultList = []
+    result_json = "[ "
     for teacher in usersSearched:
-        resultList.append(TeacherView(teacher.username, teacher.first_name, teacher.last_name))
-    serializer = TeacherViewSerializer(resultList)
-    return HttpResponse(serializer.data)
-    return JsonResponse(resultList, safe=False)
+        result_json += "{ 'first_name' : '%s', 'last_name' : '%s', 'profile_url' : '/profile/%s' }, " % (teacher.first_name, teacher.last_name, teacher.username)
+
+    if len(result_json) > 3:
+        result_json = result_json[:-2]
+    result_json += " ]"
+    return HttpResponse(result_json)
+
+
+# class TeacherView(object):
+#     def __init__(self, username, fn, ln):
+#         self.first_name = fn
+#         self.last_name = ln
+#         self.profile_url = "/profile/" + username
+#
+#
+# class TeacherViewSerializer(serializers.Serializer):
+#     first_name = serializers.CharField(max_length=100)
+#     last_name = serializers.CharField(max_length=100)
+#     profile_url = serializers.CharField(max_length=256)
+#     # def __init__(self, username, fn, ln):
+#     #     self.first_name = fn
+#     #     self.last_name = ln
+#     #     self.profile_url = "/profile/" + username
