@@ -135,6 +135,7 @@ def editprofile(request):
 
         person = Person.objects.get(user=request.user)
         person.bio = request.POST.get("bio")
+
         person.gender = request.POST.get("gender")
 
         person.picture = request.FILES.get("picture")
