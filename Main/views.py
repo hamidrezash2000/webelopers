@@ -6,21 +6,26 @@ from django.core.files.storage import FileSystemStorage, default_storage
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
-# Create your views here.
 from Main.models import Person
 from webelopers import settings
 
 
 def index(request):
+    usersSearched = []
     if request.user.groups.filter(name="استاد"):
         group = "استاد"
     else:
         group = "دانشجو"
+
+    if request.GET:
+        usersSearched = User.objects.filter(username__contains=request.GET.get("search"), groups__name__icontains="استاد")
+
     return render(request, "index.html", {
         "user": request.user,
-        "group": group
+        "group": group,
+        "usersSearched": usersSearched
     })
+
 
 
 def signup(request):
@@ -45,9 +50,8 @@ def signup(request):
             user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name, password=password1)
             person = Person()
             person.user = user
-            person.picture = "/static/pictures/user.png"
             person.save()
-            mygrp = Group.objects.get(name=request.POST.get("group","استاد"))
+            mygrp = Group.objects.get(name=request.POST.get("group", "استاد"))
             mygrp.user_set.add(user)
             return HttpResponseRedirect("/")
 
@@ -89,7 +93,7 @@ def contact(request):
         title = request.POST.get("title")
         text = request.POST.get("text")
         email = request.POST.get("email")
-        send_mail(subject=title, message=text, from_email=email, recipient_list=["ostadju@fastmail.com"])
+        # send_mail(subject=title, message=text, from_email=email, recipient_list=["ostadju@fastmail.com"])
         message = "درخواست شما ثبت شد"
     return render(request, "contactus.html", {
         "user": request.user,
@@ -105,7 +109,7 @@ def profile(request):
     person = Person.objects.get(user=request.user)
     return render(request, "profile.html", {
         "user": request.user,
-        "person":person,
+        "person": person,
         "group": group
     })
 
@@ -120,13 +124,10 @@ def editprofile(request):
         person = Person.objects.get(user=request.user)
         person.bio = request.POST.get("bio")
         person.gender = request.POST.get("gender")
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-        # if request.FILES["picture"]:
-        #     save_path = os.path.join(settings.STATIC_URL, 'pictures', request.FILES['picture'])
-        #     path = default_storage.save(save_path, request.FILES['picture'])
-        #     person.picture = default_storage.path(path)
+        if request.FILES["picture"]:
+            save_path = os.path.join(settings.STATIC_URL, 'pictures', request.FILES['picture'])
+            path = default_storage.save(save_path, request.FILES['picture'])
+            person.picture = default_storage.path(path)
         person.save()
 
         return HttpResponseRedirect("/profile")
