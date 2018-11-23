@@ -25,7 +25,7 @@
                         <form action="/" method="get">
                             {% csrf_token %}
                             <input type="text" name="search" id="id_search_profiles_input" placeholder="جستجو..."/>
-                            <input type="submit" id="id_search_profiles_button" value="جستجو"/>
+                            <button id="id_search_profiles_button" >جستجو</button>
                         </form>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
             <div class="ui items">
                 <div class="item">
                     <div class="ui image circular medium">
-                        <img src="/{{ person.picture }}">
+                        <img id="id_picture" src="/{{ person.picture }}">
                     </div>
                     <div class="content">
                         <a class="header">{{ user.first_name }} {{ user.last_name }}</a>
@@ -46,6 +46,7 @@
                             <p>
                                 {% if user.is_authenticated %}شما به عنوان {{ group }} وارد شده اید{% endif %}
                             </p>
+                            <a id="id_remove_user" href="/removeuser">حذف حساب کاربری</a>
                         </div>
                         <div class="extra">
                             {{ person.bio }}

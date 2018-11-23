@@ -11,4 +11,5 @@ class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField()
     gender = models.CharField(max_length=2, choices=GENDER_CHOICES, default="M")
-    picture = models.FileField(upload_to="static/pictures/", null=True, blank=True)
+    picture = models.FileField(upload_to="static/pictures/", null=True, blank=True, default="/static/pictures/user.png")
+

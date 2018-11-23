@@ -1,11 +1,14 @@
 import os
+from itertools import chain
 
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import User, Group
 from django.core.files.storage import FileSystemStorage, default_storage
 from django.core.mail import send_mail
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render
+from rest_framework import serializers
+
 from Main.models import Person
 from webelopers import settings
 
@@ -18,8 +21,12 @@ def index(request):
         group = "دانشجو"
 
     if request.GET:
-        usersSearched = User.objects.filter(username__contains=request.GET.get("search"), groups__name__icontains="استاد")
-
+        usersSearched1 = User.objects.filter(username__contains=request.GET.get("search"), groups__name__icontains="استاد")
+        usersSearched2 = User.objects.filter(first_name__contains=request.GET.get("search"), groups__name__icontains="استاد")
+        usersSearched3 = User.objects.filter(last_name__contains=request.GET.get("search"), groups__name__icontains="استاد")
+        usersSearched = list(set(chain(usersSearched1, usersSearched2, usersSearched3)))
+        if request.GET.get("search") == '':
+            usersSearched = []
     return render(request, "index.html", {
         "user": request.user,
         "group": group,
@@ -67,8 +74,8 @@ def signup(request):
 
 def login_(request):
     error = False
-    if request.user.is_authenticated:
-        return HttpResponseRedirect("/")
+    # if request.user.is_authenticated:
+    #     return HttpResponseRedirect("/")
 
     if request.POST:
         username = request.POST.get("username")
@@ -129,7 +136,9 @@ def editprofile(request):
         person = Person.objects.get(user=request.user)
         person.bio = request.POST.get("bio")
         person.gender = request.POST.get("gender")
-        
+
+        person.picture = request.FILES.get("picture")
+        print(request.FILES)
         person.save()
 
         return HttpResponseRedirect("/profile")
@@ -137,3 +146,44 @@ def editprofile(request):
         "user": request.user,
         "person": Person.objects.get(user=request.user),
     })
+
+def setmeeting():
+    pass
+
+
+def removeuser(request):
+    request.user.delete()
+    return HttpResponseRedirect("/login")
+
+
+class TeacherView(object):
+    def __init__(self, username, fn, ln):
+        self.first_name = fn
+        self.last_name = ln
+        self.profile_url = "/profile/" + username
+
+
+class TeacherViewSerializer(serializers.Serializer):
+    first_name = serializers.CharField(max_length=100)
+    last_name = serializers.CharField(max_length=100)
+    profile_url = serializers.CharField(max_length=256)
+    # def __init__(self, username, fn, ln):
+    #     self.first_name = fn
+    #     self.last_name = ln
+    #     self.profile_url = "/profile/" + username
+
+
+def json_query(request):
+    q = request.GET.get("query")
+    usersSearched1 = User.objects.filter(username__contains=q, groups__name__icontains="استاد")
+    usersSearched2 = User.objects.filter(first_name__contains=q, groups__name__icontains="استاد")
+    usersSearched3 = User.objects.filter(last_name__contains=q, groups__name__icontains="استاد")
+    usersSearched = list(set(chain(usersSearched1, usersSearched2, usersSearched3)))
+    if request.GET.get("query") == '':
+        usersSearched = []
+    resultList = []
+    for teacher in usersSearched:
+        resultList.append(TeacherView(teacher.username, teacher.first_name, teacher.last_name))
+    serializer = TeacherViewSerializer(resultList)
+    return HttpResponse(serializer.data)
+    return JsonResponse(resultList, safe=False)

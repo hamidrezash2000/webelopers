@@ -25,7 +25,7 @@
                         <form action="/" method="get">
                             {% csrf_token %}
                             <input type="text" name="search" id="id_search_profiles_input" placeholder="جستجو..."/>
-                            <input type="submit" id="id_search_profiles_button" value="جستجو"/>
+                            <button id="id_search_profiles_button" >جستجو</button>
                         </form>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
             </div>
             {% endif %}
             <div class="ui form">
-                <form method="post" action="." enctype="multipart/form-data; boundary=BoUnDaRyStRiNg">
+                <form method="post" action="." enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="field">
                         <input type="text" placeholder="نام" value="{{ user.first_name }}" name="first_name" id="id_first_name"/>
