@@ -6,19 +6,26 @@ from django.core.files.storage import FileSystemStorage, default_storage
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from Main.models import Person
+from Main.models import Person, Meeting
 from webelopers import settings
 
 
 def index(request):
+    usersSearched = []
     if request.user.groups.filter(name="استاد"):
         group = "استاد"
     else:
         group = "دانشجو"
+
+    if request.GET:
+        usersSearched = User.objects.filter(username__contains=request.GET.get("search"), groups__name__icontains="استاد")
+
     return render(request, "index.html", {
         "user": request.user,
-        "group": group
+        "group": group,
+        "usersSearched": usersSearched
     })
+
 
 
 def signup(request):
@@ -46,6 +53,8 @@ def signup(request):
             person.save()
             mygrp = Group.objects.get(name=request.POST.get("group", "استاد"))
             mygrp.user_set.add(user)
+
+            login(request, user)
             return HttpResponseRedirect("/")
 
     return render(request, "signup.html", {
@@ -94,14 +103,17 @@ def contact(request):
     })
 
 
-def profile(request):
+def profile(request, username=""):
+    if username == "":
+        username = request.user.username
+    user = User.objects.filter(username=username)[0]
     if request.user.groups.filter(name="استاد"):
         group = "استاد"
     else:
         group = "دانشجو"
-    person = Person.objects.get(user=request.user)
+    person = Person.objects.get(user=user)
     return render(request, "profile.html", {
-        "user": request.user,
+        "user": user,
         "person": person,
         "group": group
     })
@@ -117,10 +129,7 @@ def editprofile(request):
         person = Person.objects.get(user=request.user)
         person.bio = request.POST.get("bio")
         person.gender = request.POST.get("gender")
-        if request.FILES["picture"]:
-            save_path = os.path.join(settings.STATIC_URL, 'pictures', request.FILES['picture'])
-            path = default_storage.save(save_path, request.FILES['picture'])
-            person.picture = default_storage.path(path)
+        
         person.save()
 
         return HttpResponseRedirect("/profile")
@@ -128,3 +137,14 @@ def editprofile(request):
         "user": request.user,
         "person": Person.objects.get(user=request.user),
     })
+
+
+def setmeeting(request):
+    if request.POST:
+        meeting = Meeting()
+        meeting.capacity = request.POST.get("capacity")
+        date = request.POST.get("date")
+        start = request.POST.get("start")
+        end = request.POST.get("end")
+        meeting.teacher = request.user
+        

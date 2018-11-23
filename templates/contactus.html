@@ -22,8 +22,11 @@
             <div class="right menu">
                 <div class="item">
                     <div class="ui transparent icon input">
-                        <input type="text" placeholder="جستجو...">
-                        <i class="search link icon"></i>
+                        <form action="/" method="get">
+                            {% csrf_token %}
+                            <input type="text" name="search" id="id_search_profiles_input" placeholder="جستجو..."/>
+                            <input type="submit" id="id_search_profiles_button" value="جستجو"/>
+                        </form>
                     </div>
                 </div>
             </div>
